@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import './RegisterForm.css';
 
 export const RegisterForm: React.FC = () => {
   const [formData, setFormData] = useState({
@@ -14,7 +15,6 @@ export const RegisterForm: React.FC = () => {
     e.preventDefault();
     setMensajeError(null);
 
-    // Validaciones del Frontend
     if (!formData.correo.endsWith('@upb.edu.co')) {
       setMensajeError('Debe ingresar un correo institucional válido (@upb.edu.co)');
       return;
@@ -30,53 +30,64 @@ export const RegisterForm: React.FC = () => {
       return;
     }
 
-    // Envío de datos al Backend
     console.log('Enviando registro:', formData);
   };
 
   return (
-    <div className="register-container">
-      <h2>Crear cuenta</h2>
-      {mensajeError && <p className="error-alert">{mensajeError}</p>}
+    <div className="register-card">
+      <h2 className="register-title">Crear cuenta</h2>
+      {mensajeError && <div className="error-alert">{mensajeError}</div>}
       
-      <form onSubmit={handleSubmit}>
-        <label>Nombre completo</label>
-        <input 
-          type="text" 
-          placeholder="Juan García Pérez"
-          value={formData.nombreCompleto}
-          onChange={(e) => setFormData({...formData, nombreCompleto: e.target.value})}
-          required 
-        />
+      <form onSubmit={handleSubmit} className="register-form">
+        <div className="input-group">
+          <label>Nombre completo</label>
+          <input 
+            type="text" 
+            placeholder="Juan García Pérez"
+            value={formData.nombreCompleto}
+            onChange={(e) => setFormData({...formData, nombreCompleto: e.target.value})}
+            required 
+          />
+        </div>
 
-        <label>Correo UPB</label>
-        <input 
-          type="email" 
-          placeholder="nombre@upb.edu.co"
-          value={formData.correo}
-          onChange={(e) => setFormData({...formData, correo: e.target.value})}
-          required 
-        />
+        <div className="input-group">
+          <label>Correo UPB</label>
+          <input 
+            type="email" 
+            placeholder="nombre@upb.edu.co"
+            value={formData.correo}
+            onChange={(e) => setFormData({...formData, correo: e.target.value})}
+            required 
+          />
+        </div>
 
-        <label>Contraseña</label>
-        <input 
-          type="password" 
-          placeholder="Mínimo 8 caracteres"
-          value={formData.password}
-          onChange={(e) => setFormData({...formData, password: e.target.value})}
-          required 
-        />
+        <div className="input-group">
+          <label>Contraseña</label>
+          <input 
+            type="password" 
+            placeholder="Mínimo 8 caracteres"
+            value={formData.password}
+            onChange={(e) => setFormData({...formData, password: e.target.value})}
+            required 
+          />
+        </div>
 
-        <label>Confirmar contraseña</label>
-        <input 
-          type="password" 
-          placeholder="Repite tu contraseña"
-          value={formData.confirmPassword}
-          onChange={(e) => setFormData({...formData, confirmPassword: e.target.value})}
-          required 
-        />
+        <div className="input-group">
+          <label>Confirmar contraseña</label>
+          <input 
+            type="password" 
+            placeholder="Repite tu contraseña"
+            value={formData.confirmPassword}
+            onChange={(e) => setFormData({...formData, confirmPassword: e.target.value})}
+            required 
+          />
+        </div>
 
-        <button type="submit">Crear cuenta</button>
+        <p className="terms-text">
+          Al registrarte aceptas los <span className="link">términos de uso</span> de CarPooling UPB.
+        </p>
+
+        <button type="submit" className="submit-btn">Crear cuenta</button>
       </form>
     </div>
   );
