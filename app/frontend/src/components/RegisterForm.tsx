@@ -4,7 +4,6 @@ export const RegisterForm: React.FC = () => {
   const [formData, setFormData] = useState({
     nombreCompleto: '',
     correo: '',
-    rol: 'Pasajero', // Valor por defecto
     password: '',
     confirmPassword: ''
   });
@@ -58,15 +57,6 @@ export const RegisterForm: React.FC = () => {
           onChange={(e) => setFormData({...formData, correo: e.target.value})}
           required 
         />
-
-        <label>Quiero registrarme como</label>
-        <select 
-          value={formData.rol}
-          onChange={(e) => setFormData({...formData, rol: e.target.value})}
-        >
-          <option value="Pasajero">Pasajero</option>
-          <option value="Conductor">Conductor</option>
-        </select>
 
         <label>Contraseña</label>
         <input 
