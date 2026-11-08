@@ -11,26 +11,43 @@ export const RegisterForm: React.FC = () => {
 
   const [mensajeError, setMensajeError] = useState<string | null>(null);
 
-  const handleSubmit = async (e: React.FormEvent) => {
+const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setMensajeError(null);
 
-    if (!formData.correo.endsWith('@upb.edu.co')) {
-      setMensajeError('Debe ingresar un correo institucional válido (@upb.edu.co)');
-      return;
-    }
-
-    if (formData.password.length < 8) {
-      setMensajeError('La contraseña debe tener mínimo 8 caracteres');
-      return;
-    }
-
+    // Validación local de coincidencia de contraseñas
     if (formData.password !== formData.confirmPassword) {
-      setMensajeError('Las contraseñas no coinciden');
+      setMensajeError('Las contraseñas no coinciden.');
       return;
     }
 
-    console.log('Enviando registro:', formData);
+    try {
+      const response = await fetch('/api/auth/register', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          nombreCompleto: formData.nombreCompleto,
+          correo: formData.correo,
+          password: formData.password,
+        }),
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        setMensajeError(data.error || 'Error al intentar registrarse');
+        return;
+      }
+
+      alert('¡Registro exitoso! Guardado en la base de datos.');
+      setFormData({ nombreCompleto: '', correo: '', password: '', confirmPassword: '' });
+
+    } catch (error) {
+      console.error('Error conectando con la API:', error);
+      setMensajeError('No se pudo establecer conexión con el servidor backend.');
+    }
   };
 
   return (
