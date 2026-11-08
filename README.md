@@ -8,31 +8,34 @@ Actualmente, los estudiantes coordinan sus trayectos de forma desorganizada a tr
 **Solución:** CarPooling UPB centraliza la publicación de viajes, la búsqueda filtrada por horarios/rutas, la reserva de cupos y la gestión de perfiles estudiantiles utilizando el correo institucional para garantizar pertenencia a la comunidad.
 
 ## Guía de instalación y ejecución del proyecto
-*(Instrucciones básicas para correr la app)*
+*PENDIENTE*
 1. Clonar el repositorio.
 2. Instalar dependencias con `npm install` (o el framework que uses).
 3. Configurar la base de datos local en PostgreSQL usando Prisma ORM[cite: 1].
 4. Ejecutar el servidor con `npm run dev`.
 
-## Guía básica de uso de la aplicación
+## Guía básica de uso de la aplicación (Release 1)
 
-El flujo de uso de **CarPooling UPB** se divide en dos roles principales según las necesidades de movilidad de la comunidad universitaria:
-* **Registro e Inicio de sesión:** El usuario ingresa a la plataforma y se autentica utilizando su correo institucional de la UPB.
-* * **Rol de Usuario:** El usuario puede decidir si registrarse como conductor o como pasajero.
+El uso del primer release funcional de **CarPooling UPB** abarca los flujos del estudiante (conductor/pasajero) a través de las 4 secciones principales del sistema: **Inicio**, **Buscar**, **Mis viajes** y **Perfil**.
 
-### 1. Flujo del Estudiante Conductor
-* **Publicación de trayectos:** El conductor puede publicar un nuevo viaje especificando el punto de origen, destino, fecha, horario de salida, punto de encuentro específico (ej. portería principal o bloques) y el número de cupos disponibles en su vehículo.
-* **Gestión de viajes:** El conductor tiene la capacidad de consultar las reservas realizadas por los pasajeros, editar la información del viaje si lo requiere antes de su realización, o cancelar el trayecto en caso de imprevistos.
+### 1. Registro, Autenticación y Perfil
+* **Registro Institucional:** Crear una cuenta ingresando un correo válido con dominio institucional UPB y definir el rol (Conductor o Pasajero).
+* **Inicio de Sesión:** Autenticarse en la plataforma con las credenciales registradas.
+* **Resumen del Perfil:** Consultar la información personal del usuario desde la sección **Perfil**.
 
-### 2. Flujo del Estudiante Pasajero
-* **Búsqueda y filtrado:** El pasajero busca viajes disponibles ingresando los criterios de su trayecto (origen, destino y horario aproximado). El sistema realiza un emparejamiento mostrando las mejores opciones coincidentes.
-* **Consulta de detalles:** Al seleccionar un viaje, el pasajero puede visualizar la información detallada del conductor (incluyendo su programa académico, semestre, calificación promedio y datos del vehículo) y la información resumida del viaje.
-* **Reserva de cupos:** El pasajero puede reservar un cupo disponible en el viaje con un botón.
-* **Gestión de reservas** El pasajero puede consultar sus reservas activas.
+### 2. Flujo del Estudiante Conductor
+* **Definición y Publicación de Viaje:** Desde el menú principal (**Inicio**), acceder al formulario para definir origen, destino, fecha, hora de salida, punto de encuentro exacto y cupos disponibles, publicando el viaje en el sistema.
+* **Gestión de Viajes Publicados:** Consultar la lista de trayectos ofertados en la pestaña **Mis viajes** (sección *Publicados*).
+
+### 3. Flujo del Estudiante Pasajero
+* **Búsqueda de Viajes:** Filtrar trayectos disponibles por origen y destino desde la pestaña **Buscar**.
+* **Consulta de Información:** Seleccionar un viaje de los resultados para revisar el perfil del conductor, los cupos disponibles en tiempo real y el detalle del trayecto.
+* **Reserva de Cupo:** Confirmar la reserva de un cupo disponible con el botón **Reservar un cupo**.
+* **Gestión de Reservas:** Consultar las reservas activas y su resumen desde la pestaña **Mis viajes** (sección *Mis reservas*).
 
 ## Enlaces
 - **Tablero de Jira:** https://carpoolingupb.atlassian.net/jira/software/projects/SCRUM/boards/1?filter=&groupBy=none&atlOrigin=eyJpIjoiMTJjZWEzMTA2MThjNDg3Njg2YjVkYTEzZDk0OWE3MjciLCJwIjoiaiJ9
-- **Prototipo de Media Fidelidad (Figma):** [Insertar enlace a Figma aquí]
+- **Prototipo de Media Fidelidad (Figma):** (PENDIENTE)
 
 ## Integrantes del equipo
 - Samuel Aguilar Ruiz
