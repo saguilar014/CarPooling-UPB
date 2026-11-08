@@ -4,7 +4,7 @@ import bcrypt from 'bcrypt';
 
 const prisma = new PrismaClient();
 
-export const register = async (req: Request, res: Response): Promise<void> => {
+export const register = async (req: Request, res: Response) => {
   try {
     const { nombreCompleto, correo, password } = req.body;
 
@@ -19,6 +19,13 @@ export const register = async (req: Request, res: Response): Promise<void> => {
     if (existingUser) {
       res.status(400).json({ error: 'El correo ya se encuentra registrado' });
       return;
+    }
+
+    // Validar que la contraseña tenga al menos 8 caracteres (o los que prefieras, ej: 8 o más)
+    if (!password || password.length < 8) {
+    return res.status(400).json({ 
+        error: 'La contraseña debe tener al menos 8 caracteres.' 
+    });
     }
 
     // 3. Encriptar contraseña y guardar en PostgreSQL (Neon)

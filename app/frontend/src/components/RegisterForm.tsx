@@ -1,7 +1,12 @@
 import React, { useState } from 'react';
 import './RegisterForm.css';
+import Swal from 'sweetalert2'; // <--- Importar SweetAlert2
 
-export const RegisterForm: React.FC = () => {
+interface RegisterFormProps {
+  onBackToWelcome: () => void; // <--- Prop para regresar al inicio
+}
+
+export const RegisterForm: React.FC<RegisterFormProps> = ({ onBackToWelcome }) => {
   const [formData, setFormData] = useState({
     nombreCompleto: '',
     correo: '',
@@ -10,6 +15,13 @@ export const RegisterForm: React.FC = () => {
   });
 
   const [mensajeError, setMensajeError] = useState<string | null>(null);
+
+const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setFormData({
+      ...formData,
+      [e.target.name]: e.target.value
+    });
+  };
 
 const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -41,12 +53,26 @@ const handleSubmit = async (e: React.FormEvent) => {
         return;
       }
 
-      alert('¡Registro exitoso! Guardado en la base de datos.');
-      setFormData({ nombreCompleto: '', correo: '', password: '', confirmPassword: '' });
+      Swal.fire({
+        icon: 'success',
+        title: '¡Registro exitoso!',
+        text: 'Usuario creado correctamente.',
+        confirmButtonText: 'Aceptar',
+        confirmButtonColor: '#123B63',
+        allowOutsideClick: false
+      }).then((result) => {
+        if (result.isConfirmed) {
+          onBackToWelcome(); // <--- Redirecciona a la pantalla de inicio
+        }
+      });
 
-    } catch (error) {
-      console.error('Error conectando con la API:', error);
-      setMensajeError('No se pudo establecer conexión con el servidor backend.');
+    } catch (err: any) {
+      Swal.fire({
+        icon: 'error',
+        title: 'Oops...',
+        text: err.message || 'Hubo un error al registrarse.',
+        confirmButtonColor: '#123B63'
+      });
     }
   };
 
@@ -80,12 +106,14 @@ const handleSubmit = async (e: React.FormEvent) => {
 
         <div className="input-group">
           <label>Contraseña</label>
-          <input 
-            type="password" 
+          <input
+            type="password"
+            name="password"
             placeholder="Mínimo 8 caracteres"
             value={formData.password}
-            onChange={(e) => setFormData({...formData, password: e.target.value})}
-            required 
+            onChange={handleChange}
+            minLength={8} // <--- Fuerza al navegador a validar el mínimo
+            required
           />
         </div>
 
