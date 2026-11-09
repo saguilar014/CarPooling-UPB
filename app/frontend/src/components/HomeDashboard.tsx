@@ -13,8 +13,16 @@ interface UserProfileData {
   viajes_realizados: number;
   km_compartidos: number;
   calificacion: number;
-  rol_activo?: string;
+  roles?: string;
 }
+
+// Función auxiliar arriba del componente para dar formato al rol
+const formatRoleText = (role?: string) => {
+  if (role === 'conductor') return 'Conductor';
+  if (role === 'pasajero') return 'Pasajero';
+  if (role === 'ambos') return 'Conductor · Pasajero';
+  return 'Pasajero';
+};
 
 export const HomeDashboard: React.FC<HomeDashboardProps> = ({ onNavigate }) => {
   const userName = localStorage.getItem('userName') || 'Usuario UPB';
@@ -67,9 +75,6 @@ export const HomeDashboard: React.FC<HomeDashboardProps> = ({ onNavigate }) => {
                 <span className="logo-icon">🚗</span>
                 <h1>CarPooling <span>UPB</span></h1>
                 </div>
-                <button className="profile-avatar-btn" onClick={() => onNavigate('perfil')}>
-                <div className="avatar-icon">👤</div>
-                </button>
             </header>
 
             {/* 2. Saludo y Roles */}
@@ -80,8 +85,10 @@ export const HomeDashboard: React.FC<HomeDashboardProps> = ({ onNavigate }) => {
                     <h2 className="user-name">{loading ? 'Cargando...' : displayName}</h2>
                 </div>
                 <div className="user-role-badge">
-                    <span>Conductor · Pasajero</span>
-                    <span className="rating-star">★ 4.8</span>
+                    <span>{loading ? 'Cargando...' : formatRoleText(userData?.roles)}</span>
+                    <span className="rating-star">
+                      ★ {loading ? '...' : (userData?.calificacion !== undefined && userData?.calificacion !== null ? Number(userData.calificacion).toFixed(1) : '5.0')}
+                      </span>
                 </div>
                 </div>
             </section>

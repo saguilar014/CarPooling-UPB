@@ -4,6 +4,7 @@ import { RegisterForm } from './components/RegisterForm';
 import { LoginForm } from './components/LoginForm';
 import { HomeDashboard } from './components/HomeDashboard';
 import './components/HomeDashboard.css';
+import Perfil from './components/Perfil';
 
 type ViewType = 'welcome' | 'register' | 'login' | 'dashboard' | 'buscar' | 'publicar' | 'mis-viajes' | 'perfil';
 
@@ -94,6 +95,11 @@ export function App() {
       {currentView === 'dashboard' && (
         <HomeDashboard onNavigate={(view) => changeView(view)} />
       )}
+
+      {currentView === 'perfil' && (
+        <Perfil onNavigate={(view) => changeView(view)} />
+      )}
+
     </main>
   );
 }
