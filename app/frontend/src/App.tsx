@@ -5,6 +5,7 @@ import { LoginForm } from './components/LoginForm';
 import { HomeDashboard } from './components/HomeDashboard';
 import './components/HomeDashboard.css';
 import Perfil from './components/Perfil';
+import { Buscar } from './components/Buscar';
 
 type ViewType = 'welcome' | 'register' | 'login' | 'dashboard' | 'buscar' | 'publicar' | 'mis-viajes' | 'perfil';
 
@@ -98,6 +99,16 @@ export function App() {
 
       {currentView === 'perfil' && (
         <Perfil onNavigate={(view) => changeView(view)} />
+      )}
+
+      {currentView === 'buscar' && (
+        <Buscar onNavigate={(view) => changeView(view as ViewType)} 
+        onSearchResults={(results) => {
+          console.log("¡Resultados recibidos en el padre!", results);
+            // Aquí puedes guardar los resultados en un estado de tu dashboard 
+            // o pasarlos a tu vista de resultados para mostrarlos en pantalla
+          }}
+        />
       )}
 
     </main>
