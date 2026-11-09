@@ -6,14 +6,16 @@ import { HomeDashboard } from './components/HomeDashboard';
 import './components/HomeDashboard.css';
 import Perfil from './components/Perfil';
 import { Buscar } from './components/Buscar';
-import ResultadosBusqueda from './components/ResultadosBusqueda';
+import ResultadosBusqueda from './components/ResultadosBusqueda'
+import DetalleViaje from './components/DetalleViaje';;
 
-type ViewType = 'welcome' | 'register' | 'login' | 'dashboard' | 'buscar' | 'resultados' | 'publicar' | 'mis-viajes' | 'perfil';
+type ViewType = 'welcome' | 'register' | 'login' | 'dashboard' | 'buscar' | 'resultados' | 'detalle' | 'publicar' | 'mis-viajes' | 'perfil';
 
 export function App() {
 
   // Estado para guardar la ruta buscada
   const [searchParams, setSearchParams] = useState({ origen: '', destino: '' });
+  const [selectedTripId, setSelectedTripId] = useState<string | null>(null);
   const [currentView, setCurrentView] = useState<ViewType>('welcome');
 
   // Sincronizar con el historial del navegador al presionar "atrás" o "adelante"
@@ -120,8 +122,16 @@ export function App() {
           destino={searchParams.destino || 'Destino'}
           onNavigate={(view) => changeView(view as ViewType)}
           onSelectTrip={(tripId) => {
-            console.log("Viaje seleccionado:", tripId);
+            setSelectedTripId(tripId); // <--- GUARDAR EL ID
+            changeView('detalle');     // <--- CAMBIAR A LA VISTA DETALLE
           }}
+        />
+      )}
+
+      {currentView === 'detalle' && (
+        <DetalleViaje 
+          tripId={selectedTripId}
+          onNavigate={(view) => changeView(view as ViewType)}
         />
       )}
 
