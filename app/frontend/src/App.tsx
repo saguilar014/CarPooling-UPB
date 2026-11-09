@@ -6,11 +6,14 @@ import { HomeDashboard } from './components/HomeDashboard';
 import './components/HomeDashboard.css';
 import Perfil from './components/Perfil';
 import { Buscar } from './components/Buscar';
+import ResultadosBusqueda from './components/ResultadosBusqueda';
 
-type ViewType = 'welcome' | 'register' | 'login' | 'dashboard' | 'buscar' | 'publicar' | 'mis-viajes' | 'perfil';
+type ViewType = 'welcome' | 'register' | 'login' | 'dashboard' | 'buscar' | 'resultados' | 'publicar' | 'mis-viajes' | 'perfil';
 
 export function App() {
 
+  // Estado para guardar la ruta buscada
+  const [searchParams, setSearchParams] = useState({ origen: '', destino: '' });
   const [currentView, setCurrentView] = useState<ViewType>('welcome');
 
   // Sincronizar con el historial del navegador al presionar "atrás" o "adelante"
@@ -103,10 +106,21 @@ export function App() {
 
       {currentView === 'buscar' && (
         <Buscar onNavigate={(view) => changeView(view as ViewType)} 
-        onSearchResults={(results) => {
-          console.log("¡Resultados recibidos en el padre!", results);
-            // Aquí puedes guardar los resultados en un estado de tu dashboard 
-            // o pasarlos a tu vista de resultados para mostrarlos en pantalla
+        onSearchResults={(origen, destino) => {
+            // Guardamos el origen y destino seleccionados
+            setSearchParams({ origen, destino });
+            changeView('resultados');
+        }}
+        />
+      )}
+
+      {currentView === 'resultados' && (
+        <ResultadosBusqueda 
+          origen={searchParams.origen || 'Origen'}
+          destino={searchParams.destino || 'Destino'}
+          onNavigate={(view) => changeView(view as ViewType)}
+          onSelectTrip={(tripId) => {
+            console.log("Viaje seleccionado:", tripId);
           }}
         />
       )}

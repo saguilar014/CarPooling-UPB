@@ -1,5 +1,7 @@
 import React from 'react';
 import { useEffect, useState } from 'react';
+import Buscar from './Buscar';
+import ResultadosBusqueda from './ResultadosBusqueda';
 
 export type ActiveView = 'welcome' | 'register' | 'login' | 'dashboard' | 'buscar' | 'publicar' | 'mis-viajes' | 'perfil';
 
