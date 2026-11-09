@@ -1,0 +1,202 @@
+.resultados-container {
+  width: 90% !important;        /* Ocupa el 90% de la pantalla */
+  max-width: 440px !important;  /* Ajusta este número: bájalo a 480px si lo quieres más pequeño, o súbelo si lo quieres más ancho */
+  margin: 20px auto !important; /* Lo centra perfectamente */
+  padding: 24px 20px;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  color: #1e293b;
+  background-color: #f8fafc;
+  min-height: auto;
+  border-radius: 20px;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+  box-sizing: border-box;
+}
+
+.resultados-header {
+  display: flex;
+  align-items: center;
+  margin-bottom: 16px;
+}
+
+.btn-back {
+  background: none;
+  border: none;
+  font-size: 28px;
+  cursor: pointer;
+  color: #0f172a;
+  margin-right: 12px;
+  line-height: 1;
+}
+
+.resultados-main-title {
+  font-size: 20px;
+  font-weight: 700;
+  color: #0f172a;
+  margin: 0;
+}
+
+.filtros-resumen-bar {
+  margin-bottom: 12px;
+}
+
+.badge-ruta {
+  background: #e2e8f0;
+  padding: 8px 12px;
+  border-radius: 20px;
+  font-size: 13px;
+  color: #334155;
+  display: inline-block;
+}
+
+.ordenar-section {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 16px;
+  font-size: 14px;
+  color: #64748b;
+}
+
+.select-orden {
+  padding: 6px 12px;
+  border-radius: 8px;
+  border: 1px solid #cbd5e1;
+  background: #fff;
+  font-size: 14px;
+  color: #0f172a;
+  outline: none;
+}
+
+.total-disponibles {
+  font-weight: 600;
+}
+
+.tarjetas-lista {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.trip-card {
+  background: #ffffff;
+  border-radius: 16px;
+  padding: 16px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+  border: 1px solid #e2e8f0;
+}
+
+.card-header-conductor {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 12px;
+}
+
+.conductor-info-left {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.conductor-avatar {
+  width: 42px;
+  height: 42px;
+  border-radius: 50%;
+  background: #1e3a8a;
+  color: #ffffff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: bold;
+  font-size: 15px;
+}
+
+.conductor-textos h3 {
+  font-size: 15px;
+  font-weight: 700;
+  margin: 0 0 2px 0;
+  color: #0f172a;
+}
+
+.conductor-textos p {
+  font-size: 13px;
+  color: #64748b;
+  margin: 0;
+}
+
+.conductor-info-right {
+  text-align: right;
+}
+
+.rating-badge {
+  font-size: 13px;
+  font-weight: 600;
+  color: #b45309;
+  margin-bottom: 4px;
+}
+
+.resenas-count {
+  color: #94a3b8;
+  font-weight: normal;
+}
+
+.cupos-badge {
+  background: #dcfce7;
+  color: #15803d;
+  font-size: 12px;
+  font-weight: 700;
+  padding: 2px 8px;
+  border-radius: 12px;
+  display: inline-block;
+}
+
+.card-body-detalles {
+  border-top: 1px solid #f1f5f9;
+  border-bottom: 1px solid #f1f5f9;
+  padding: 10px 0;
+  margin-bottom: 12px;
+}
+
+.horario-ruta {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 6px;
+}
+
+.hora-text {
+  font-size: 16px;
+  font-weight: 700;
+  color: #1e3a8a;
+}
+
+.ruta-trayecto {
+  font-size: 14px;
+  color: #334155;
+  font-weight: 500;
+}
+
+.punto-encuentro {
+  font-size: 13px;
+  color: #64748b;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.btn-ver-detalle {
+  width: 100%;
+  background-color: #1e3a8a;
+  color: white;
+  border: none;
+  padding: 10px;
+  border-radius: 10px;
+  font-weight: 600;
+  font-size: 14px;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.btn-ver-detalle:hover {
+  background-color: #1e40af;
+}

@@ -5,7 +5,7 @@ import './Buscar.css';
 
 interface BuscarProps {
   onNavigate?: (tab: string) => void; // Cambiado de ViewType a string genérico
-  onSearchResults?: (results: any[]) => void;
+  onSearchResults?: (origen: string, destino: string) => void;
 }
 
 
@@ -18,7 +18,6 @@ export const Buscar: React.FC<BuscarProps> = ({ onNavigate, onSearchResults }) =
 
   const handleSearchSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    console.log("¡El botón fue presionado con éxito!");
 
     // 🔴 Criterio 1: Se deben diligenciar ambos campos para ejecutar la búsqueda
     if (!origen.trim() || !destino.trim()) {
@@ -29,6 +28,12 @@ export const Buscar: React.FC<BuscarProps> = ({ onNavigate, onSearchResults }) =
     if (origen === destino) {
       setError('El origen y el destino no pueden ser iguales.');
       return;
+    }
+
+    // Ejecutamos la navegación hacia la pantalla de resultados
+    if (onSearchResults) {
+      // En lugar de enviar '[]', enviamos el origen y el destino
+      onSearchResults(origen, destino);
     }
 
     setError(null);
@@ -53,7 +58,8 @@ export const Buscar: React.FC<BuscarProps> = ({ onNavigate, onSearchResults }) =
       console.log('Viajes encontrados:', data);
 
       if (onSearchResults) {
-        onSearchResults(data);
+        // En lugar de pasar 'data', pasamos el origen y el destino
+        onSearchResults(origen, destino);
       }
     } catch (err: any) {
       setError(err.message || 'Ocurrió un error al realizar la búsqueda.');
