@@ -1,0 +1,151 @@
+.buscar-container {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  max-width: 440px;          /* Ancho máximo contenido igual que las demás vistas */
+  margin: 20px auto;         /* Espacio automático a los lados y margen arriba/abajo */
+  padding: 24px 20px;        /* Espaciado interno cómodo */
+  background-color: #ffffff; /* O #f8fafc según el fondo general de tu app */
+  border-radius: 20px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+  box-sizing: border-box;
+}
+
+/* Opcional: Asegúrate de que el body o el contenedor principal en App.tsx tenga centrado flex */
+
+.buscar-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 20px;
+}
+
+.btn-back {
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 50%;
+  width: 36px;
+  height: 36px;
+  font-size: 1.2rem;
+  font-weight: bold;
+  color: #1e3a8a;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+.buscar-main-title {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #0f172a;
+  margin: 0;
+}
+
+.buscar-card {
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 16px;
+  padding: 24px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.03);
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.buscar-card-title {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: #1e293b;
+  margin: 0 0 8px 0;
+}
+
+.inputs-group {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  position: relative;
+  margin-bottom: 24px;
+}
+
+.input-row {
+  display: flex;
+  align-items: center;
+  position: relative;
+}
+
+/* Línea conectora simulada entre los puntos de origen y destino */
+.inputs-group::before {
+  content: '';
+  position: absolute;
+  left: 7px;
+  top: 20px;
+  bottom: 20px;
+  width: 2px;
+  background-color: #cbd5e1;
+}
+
+.indicator-dot {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  margin-right: 12px;
+  z-index: 2;
+  flex-shrink: 0;
+}
+
+.origin-dot {
+  border: 2px solid #1e3a8a;
+  background-color: #ffffff;
+}
+
+.destination-dot {
+  background-color: #1e3a8a;
+}
+
+.buscar-select {
+  width: 100%;
+  padding: 14px 16px;
+  background-color: #f8fafc;
+  border: 1px solid #cbd5e1;
+  border-radius: 12px;
+  font-size: 0.95rem;
+  color: #334155;
+  outline: none;
+  cursor: pointer;
+  transition: border-color 0.2s;
+}
+
+.buscar-select:focus {
+  border-color: #1e3a8a;
+  background-color: #ffffff;
+}
+
+.btn-buscar-submit {
+  width: 100%;
+  background-color: #1e3a8a;
+  color: #ffffff;
+  border: none;
+  border-radius: 12px;
+  padding: 16px;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.2s;
+  box-shadow: 0 4px 10px rgba(30, 58, 138, 0.2);
+}
+
+.btn-buscar-submit:hover {
+  background-color: #1d4ed8;
+}
+
+.buscar-error-msg {
+  background-color: #fef2f2;
+  color: #dc2626;
+  border: 1px solid #fecaca;
+  padding: 10px 14px;
+  border-radius: 8px;
+  font-size: 0.85rem;
+  margin-bottom: 12px;
+}
