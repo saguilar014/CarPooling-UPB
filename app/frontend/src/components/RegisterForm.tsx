@@ -4,9 +4,10 @@ import Swal from 'sweetalert2'; // <--- Importar SweetAlert2
 
 interface RegisterFormProps {
   onBackToWelcome: () => void; // <--- Prop para regresar al inicio
+  onNavigateToLogin: () => void;
 }
 
-export const RegisterForm: React.FC<RegisterFormProps> = ({ onBackToWelcome }) => {
+export const RegisterForm: React.FC<RegisterFormProps> = ({ onBackToWelcome, onNavigateToLogin}) => {
   const [formData, setFormData] = useState({
     nombreCompleto: '',
     correo: '',
@@ -133,6 +134,18 @@ const handleSubmit = async (e: React.FormEvent) => {
         </p>
 
         <button type="submit" className="submit-btn">Crear cuenta</button>
+
+        <p className="terms-text" style={{ textAlign: 'center', marginTop: '15px' }}>
+                  ¿Ya tienes una cuenta?{' '}
+                  <span 
+                    className="link" 
+                    style={{ color: '#123B63', cursor: 'pointer', fontWeight: 'bold' }}
+                    onClick={onNavigateToLogin}
+                  >
+                    Inicia sesión
+          </span>
+        </p>
+
       </form>
     </div>
   );

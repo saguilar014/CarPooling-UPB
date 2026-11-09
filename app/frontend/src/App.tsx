@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { WelcomeView } from './components/WelcomeView';
 import { RegisterForm } from './components/RegisterForm';
+import { LoginForm } from './components/LoginForm';
 
 export function App() {
   const [currentView, setCurrentView] = useState<'welcome' | 'register' | 'login'>('welcome');
@@ -38,12 +39,22 @@ export function App() {
       {currentView === 'welcome' && (
         <WelcomeView
           onNavigateToRegister={() => changeView('register')}
-          onNavigateToLogin={() => alert('Próximamente: Vista de Login')}
+          onNavigateToLogin={() => changeView('login')}
         />
       )}
 
       {currentView === 'register' && (
-        <RegisterForm onBackToWelcome={() => changeView('welcome')} />
+        <RegisterForm 
+        onBackToWelcome={() => changeView('welcome')} 
+        onNavigateToLogin={() => changeView('login')}
+        />
+      )}
+
+      {currentView === 'login' && (
+        <LoginForm 
+          onLoginSuccess={() => changeView('welcome')} 
+          onBackToWelcome={() => changeView('register')} 
+        />
       )}
     </main>
   );

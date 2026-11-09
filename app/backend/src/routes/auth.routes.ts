@@ -1,6 +1,7 @@
 import { Router } from 'express';
 import { PrismaClient } from '@prisma/client';
 import bcrypt from 'bcrypt';
+import { register, loginUser } from '../controllers/auth.controller';
 
 const router = Router();
 const prisma = new PrismaClient();
@@ -49,5 +50,7 @@ router.post('/register', async (req, res) => {
     return res.status(500).json({ error: 'Error interno del servidor.' });
   }
 });
+
+router.post('/login', loginUser);
 
 export default router;

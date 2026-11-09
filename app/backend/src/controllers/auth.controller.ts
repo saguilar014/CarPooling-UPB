@@ -1,6 +1,7 @@
 import { Request, Response } from 'express';
 import { PrismaClient } from '@prisma/client';
 import bcrypt from 'bcrypt';
+import jwt from 'jsonwebtoken';
 
 const prisma = new PrismaClient();
 
@@ -44,5 +45,50 @@ export const register = async (req: Request, res: Response) => {
     });
   } catch (error) {
     res.status(500).json({ error: 'Error interno en el servidor al registrar usuario' });
+  }
+};
+
+export const loginUser = async (req: Request, res: Response): Promise<Response> => {
+  try {
+    const { correo, password } = req.body;
+
+    if (!correo || !password) {
+      return res.status(400).json({ error: 'Por favor ingresa correo y contraseña.' });
+    }
+
+    const user = await prisma.user.findUnique({
+      where: { correo }
+    });
+
+    if (!user) {
+      return res.status(401).json({ error: 'Credenciales inválidas. Revisa tu correo o contraseña.' });
+    }
+
+    const isPasswordValid = await bcrypt.compare(password, user.password);
+    if (!isPasswordValid) {
+      return res.status(401).json({ error: 'Credenciales inválidas. Revisa tu correo o contraseña.' });
+    }
+
+    // 1. Crear el token JWT (Expira en 24h)
+    const secretKey = process.env.JWT_SECRET || 'secreto_super_seguro_upb';
+    const token = jwt.sign(
+      { id: user.id, correo: user.correo },
+      secretKey,
+      { expiresIn: '24h' }
+    );
+
+    // 2. Responder con el token y los datos del usuario
+    return res.status(200).json({
+      message: 'Inicio de sesión exitoso',
+      token, // <--- Enviamos el token al frontend
+      user: {
+        id: user.id,
+        nombreCompleto: user.nombreCompleto,
+        correo: user.correo
+      }
+    });
+
+  } catch (error: any) {
+    return res.status(500).json({ error: 'Error interno del servidor en el login.' });
   }
 };
