@@ -2,26 +2,60 @@ import { useState, useEffect } from 'react';
 import { WelcomeView } from './components/WelcomeView';
 import { RegisterForm } from './components/RegisterForm';
 import { LoginForm } from './components/LoginForm';
+import { HomeDashboard } from './components/HomeDashboard';
+import './components/HomeDashboard.css';
+
+type ViewType = 'welcome' | 'register' | 'login' | 'dashboard' | 'buscar' | 'publicar' | 'mis-viajes' | 'perfil';
 
 export function App() {
-  const [currentView, setCurrentView] = useState<'welcome' | 'register' | 'login'>('welcome');
+
+  const [currentView, setCurrentView] = useState<ViewType>('welcome');
 
   // Sincronizar con el historial del navegador al presionar "atrás" o "adelante"
   useEffect(() => {
-    const handlePopState = (event: PopStateEvent) => {
-      if (event.state && event.state.view) {
-        setCurrentView(event.state.view);
-      } else {
-        setCurrentView('welcome');
-      }
-    };
 
-    window.addEventListener('popstate', handlePopState);
-    return () => window.removeEventListener('popstate', handlePopState);
-  }, []);
+    // 1. Validar sesión al cargar la app por primera vez o recargar la página (F5)
+    const token = localStorage.getItem('token');
+    if (token) {
+      setCurrentView('dashboard');
+    } else if (currentView === 'dashboard') {
+      setCurrentView('welcome');
+    }
+
+  // 2. Manejar la navegación con los botones del navegador (atrás/adelante)
+  const handlePopState = (event: PopStateEvent) => {
+    const currentToken = localStorage.getItem('token');
+
+    if (event.state && event.state.view) {
+      // Si intenta ir a dashboard sin token, lo enviamos a login
+      if (event.state.view === 'dashboard' && !currentToken) {
+        setCurrentView('login');
+      } else {
+        setCurrentView(event.state.view);
+      }
+    } else {
+      // Si no hay estado en el historial, decidimos según si está logueado o no
+      setCurrentView(currentToken ? 'dashboard' : 'welcome');
+    }
+  };
+
+  window.addEventListener('popstate', handlePopState);
+
+  // Limpieza del listener al desmontar el componente
+  return () => {
+    window.removeEventListener('popstate', handlePopState);
+  };
+}, []);
 
   // Función para cambiar de vista y registrarla en el historial del navegador
-  const changeView = (view: 'welcome' | 'register' | 'login') => {
+  const changeView = (view: ViewType) => {
+
+    // Si intenta ir al dashboard pero no tiene token guardado, lo mandamos a login
+    if (view === 'dashboard' && !localStorage.getItem('token')) {
+      setCurrentView('login');
+      return;
+    }
+
     setCurrentView(view);
     window.history.pushState({ view }, '', `#${view}`);
   };
@@ -52,9 +86,13 @@ export function App() {
 
       {currentView === 'login' && (
         <LoginForm 
-          onLoginSuccess={() => changeView('welcome')} 
+          onLoginSuccess={() => changeView('dashboard')} 
           onBackToWelcome={() => changeView('register')} 
         />
+      )}
+
+      {currentView === 'dashboard' && (
+        <HomeDashboard onNavigate={(view) => changeView(view)} />
       )}
     </main>
   );

@@ -47,6 +47,7 @@ export const LoginForm: React.FC<LoginFormProps> = ({ onLoginSuccess, onBackToWe
       }
 
       localStorage.setItem('token', data.token);
+      localStorage.setItem('userName', data.user.nombreCompleto);
 
       // Criterio de aceptación 1: Credenciales correctas -> Alerta y redirección
       Swal.fire({
