@@ -11,7 +11,7 @@ Actualmente, los estudiantes coordinan sus trayectos de forma desorganizada a tr
 *PENDIENTE*
 1. Clonar el repositorio.
 2. Instalar dependencias con `npm install` (o el framework que uses).
-3. Configurar la base de datos local en PostgreSQL usando Prisma ORM[cite: 1].
+3. Configurar la base de datos local en PostgreSQL usando Prisma ORM.
 4. Ejecutar el servidor con `npm run dev`.
 
 ## Guía básica de uso de la aplicación (Release 1)
