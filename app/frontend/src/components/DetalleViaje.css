@@ -1,0 +1,186 @@
+.detalle-content {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  margin-top: 12px;
+  padding-bottom: 20px;
+}
+
+/* Tarjeta Conductor */
+.card-conductor-detalle {
+  background: #ffffff;
+  border-radius: 16px;
+  padding: 16px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+  border: 1px solid #f1f5f9;
+}
+
+.conductor-header-row {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.avatar-circle {
+  width: 54px;
+  height: 54px;
+  border-radius: 50%;
+  background: #0f3d7a;
+  color: #ffffff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  font-size: 1.2rem;
+  flex-shrink: 0;
+}
+
+.conductor-main-info {
+  flex: 1;
+}
+
+.nombre-verificado-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.conductor-nombre {
+  margin: 0;
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: #0f2942;
+}
+
+.badge-verificado {
+  background-color: #e6f4ea;
+  color: #137333;
+  font-size: 0.75rem;
+  font-weight: 600;
+  padding: 3px 8px;
+  border-radius: 12px;
+}
+
+.conductor-carrera {
+  margin: 2px 0 4px 0;
+  font-size: 0.85rem;
+  color: #64748b;
+}
+
+.rating-row {
+  font-size: 0.85rem;
+  color: #f59e0b;
+}
+
+.resenas-text {
+  color: #94a3b8;
+  font-weight: 400;
+  margin-left: 4px;
+}
+
+.divider-line {
+  border: 0;
+  height: 1px;
+  background: #f1f5f9;
+  margin: 12px 0;
+}
+
+.vehiculo-label {
+  font-size: 0.78rem;
+  color: #94a3b8;
+  display: block;
+}
+
+.vehiculo-texto {
+  margin: 2px 0 0 0;
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: #1e293b;
+}
+
+/* Tarjeta Info Viaje */
+.card-info-viaje {
+  background: #ffffff;
+  border-radius: 16px;
+  padding: 16px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+  border: 1px solid #f1f5f9;
+}
+
+.section-title {
+  margin: 0 0 14px 0;
+  font-size: 1.05rem;
+  color: #0f2942;
+  font-weight: 700;
+}
+
+.timeline-container {
+  display: flex;
+  flex-direction: column;
+  padding-left: 4px;
+}
+
+.timeline-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+}
+
+.dot-circle {
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  margin-top: 3px;
+}
+
+.origen-dot {
+  border: 3px solid #3b82f6;
+  background: #ffffff;
+}
+
+.destino-dot {
+  background: #0f3d7a;
+}
+
+.timeline-line {
+  width: 2px;
+  height: 22px;
+  border-left: 2px dashed #cbd5e1;
+  margin-left: 6px;
+  margin-top: 2px;
+  margin-bottom: 2px;
+}
+
+.sub-label {
+  font-size: 0.8rem;
+  color: #94a3b8;
+  display: block;
+}
+
+.lugar-nombre {
+  margin: 1px 0 0 0;
+  font-weight: 700;
+  color: #1e293b;
+  font-size: 0.95rem;
+}
+
+/* Botón Reservar */
+.btn-reservar-cupo {
+  width: 100%;
+  background-color: #15803d;
+  color: #ffffff;
+  border: none;
+  padding: 14px;
+  border-radius: 25px;
+  font-size: 1rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: background-color 0.2s;
+  box-shadow: 0 4px 10px rgba(21, 128, 61, 0.2);
+  margin-top: 6px;
+}
+
+.btn-reservar-cupo:hover {
+  background-color: #166534;
+}
