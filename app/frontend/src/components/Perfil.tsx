@@ -82,6 +82,15 @@ export default function Perfil({ onNavigate }: PerfilProps) {
     };
   }, []);
 
+  const handleLogout = () => {
+  // 1. Eliminas el token (y cualquier dato guardado del usuario)
+  localStorage.removeItem('token'); 
+  // localStorage.removeItem('user'); // Si guardas más cosas, las limpias también
+
+  // 2. Redireccionas al login o recargas para limpiar el estado
+  window.location.href = '/login'; // O usas tu router/onNavigate si lo manejas por estado
+  };
+
   const handleSave = async () => {
     try {
       const token = localStorage.getItem('token');
@@ -131,15 +140,34 @@ export default function Perfil({ onNavigate }: PerfilProps) {
 
   return (
     <div className="dashboard-container" style={{display: 'flex', flexDirection: 'column', justifyContent: 'space-between' }}>
-      <div className="perfil-container" style={{ paddingBottom: '20px', flex: 1 }}>
-        <div className="perfil-header">
+      <div className="perfil-container" style={{ marginLeft : '15px', marginRight: '15px', paddingBottom: '20px', flex: 1 }}>
+        <div className="perfil-header" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px' }}>
           <h1 className="perfil-title">Mi perfil</h1>
-          <button 
-            className="btn-editar" 
-            onClick={isEditing ? handleSave : () => setIsEditing(true)}
-          >
-            {isEditing ? 'Guardar' : '✏️ Editar'}
-          </button>
+          
+          <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end', gap: '8px' }}>
+            <button 
+              onClick={handleLogout} 
+              style={{
+                backgroundColor: '#ef4444',
+                color: '#ffffff',
+                border: 'none',
+                borderRadius: '20px',
+                padding: '6px 14px',
+                fontSize: '0.85rem',
+                fontWeight: 600,
+                cursor: 'pointer'
+              }}
+            >
+              Cerrar sesión
+            </button>
+
+            <button 
+              className="btn-editar" 
+              onClick={isEditing ? handleSave : () => setIsEditing(true)}
+            >
+              {isEditing ? 'Guardar' : '✏️ Editar'}
+            </button>
+          </div>
         </div>
 
         {loading ? (
