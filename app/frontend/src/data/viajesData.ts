@@ -19,7 +19,14 @@ export interface Viaje {
   cuposDisponibles: number;
 }
 
-export const TODOS_LOS_VIAJES: Viaje[] = [
+export interface Reserva {
+  idReserva: string;
+  viaje: Viaje;
+  fechaReserva: string;
+  estado: 'Confirmado' | 'Cancelado';
+}
+
+const VIAJES_INICIALES: Viaje[] = [
   {
     id: '1',
     conductor: {
@@ -141,3 +148,71 @@ export const TODOS_LOS_VIAJES: Viaje[] = [
     cuposDisponibles: 2,
   },
 ];
+
+export const obtenerViajesActualizados = (): Viaje[] => {
+  const guardados = localStorage.getItem('todos_los_viajes_upb');
+  if (guardados) {
+    return JSON.parse(guardados);
+  }
+  localStorage.setItem('todos_los_viajes_upb', JSON.stringify(VIAJES_INICIALES));
+  return VIAJES_INICIALES;
+};
+
+export let TODOS_LOS_VIAJES: Viaje[] = obtenerViajesActualizados();
+
+const obtenerUsuarioActual = (): string => {
+  return localStorage.getItem('usuario_actual') || 'default_user';
+};
+
+export const obtenerReservasGuardadas = (): Reserva[] => {
+  const usuario = obtenerUsuarioActual();
+  const data = localStorage.getItem(`mis_reservas_${usuario}`);
+  return data ? JSON.parse(data) : [];
+};
+
+export const estaReservadoPorUsuario = (tripId: string): boolean => {
+  const reservas = obtenerReservasGuardadas();
+  return reservas.some((r) => r.viaje.id === tripId);
+};
+
+export const realizarReserva = (tripId: string): { exito: boolean; mensaje: string; reserva?: Reserva } => {
+  const viaje = TODOS_LOS_VIAJES.find((v) => v.id === tripId);
+  const usuario = obtenerUsuarioActual();
+
+  // 1. Validar que el viaje exista primero
+  if (!viaje) {
+    return { exito: false, mensaje: 'El viaje seleccionado no existe.' };
+  }
+
+  // 2. Validar disponibilidad
+  if (viaje.cuposDisponibles <= 0) {
+    return { exito: false, mensaje: 'No hay cupos disponibles en este viaje.' };
+  }
+
+  // 3. Validar si ya lo reservó
+  if (estaReservadoPorUsuario(tripId)) {
+    return { exito: false, mensaje: 'Ya tienes una reserva activa para este viaje.' };
+  }
+
+  // 4. Ahora sí, restar el cupo y guardar en localStorage los viajes y las reservas
+  viaje.cuposDisponibles -= 1;
+  localStorage.setItem('todos_los_viajes_upb', JSON.stringify(TODOS_LOS_VIAJES));
+
+  const nuevaReserva: Reserva = {
+    idReserva: 'RES-' + Date.now(),
+    viaje: { ...viaje },
+    fechaReserva: new Date().toLocaleDateString('es-CO', {
+      weekday: 'long',
+      year: 'numeric',
+      month: 'long',
+      day: 'numeric',
+    }),
+    estado: 'Confirmado',
+  };
+
+  const reservasPrevias = obtenerReservasGuardadas();
+  const reservasActualizadas = [nuevaReserva, ...reservasPrevias];
+  localStorage.setItem(`mis_reservas_${usuario}`, JSON.stringify(reservasActualizadas));
+
+  return { exito: true, mensaje: '¡Reserva realizada con éxito!', reserva: nuevaReserva };
+};

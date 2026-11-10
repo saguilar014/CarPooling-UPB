@@ -8,14 +8,17 @@ import Perfil from './components/Perfil';
 import { Buscar } from './components/Buscar';
 import ResultadosBusqueda from './components/ResultadosBusqueda'
 import DetalleViaje from './components/DetalleViaje';;
+import ReservaConfirmada from './components/ReservaConfirmada';
+import { Reserva } from './data/viajesData';
 
-type ViewType = 'welcome' | 'register' | 'login' | 'dashboard' | 'buscar' | 'resultados' | 'detalle' | 'publicar' | 'mis-viajes' | 'perfil';
+type ViewType = 'welcome' | 'register' | 'login' | 'dashboard' | 'buscar' | 'resultados' | 'detalle' | 'reserva-confirmada' |'publicar' | 'mis-viajes' | 'perfil';
 
 export function App() {
 
   // Estado para guardar la ruta buscada
   const [searchParams, setSearchParams] = useState({ origen: '', destino: '' });
   const [selectedTripId, setSelectedTripId] = useState<string | null>(null);
+  const [ultimaReserva, setUltimaReserva] = useState<Reserva | null>(null);
   const [currentView, setCurrentView] = useState<ViewType>('welcome');
 
   // Sincronizar con el historial del navegador al presionar "atrás" o "adelante"
@@ -132,9 +135,19 @@ export function App() {
         <DetalleViaje 
           tripId={selectedTripId}
           onNavigate={(view) => changeView(view as ViewType)}
+          onReservaExitosa={(reserva) => {
+            setUltimaReserva(reserva);
+            changeView('reserva-confirmada');
+          }}
         />
       )}
 
+      {currentView === 'reserva-confirmada' && (
+        <ReservaConfirmada 
+          reserva={ultimaReserva}
+          onNavigate={(view) => changeView(view as ViewType)}
+        />
+      )}
     </main>
   );
 }
