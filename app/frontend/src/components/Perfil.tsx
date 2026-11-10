@@ -85,8 +85,7 @@ export default function Perfil({ onNavigate }: PerfilProps) {
   const handleLogout = () => {
   // 1. Eliminas el token (y cualquier dato guardado del usuario)
   localStorage.removeItem('token'); 
-  // localStorage.removeItem('user'); // Si guardas más cosas, las limpias también
-
+  localStorage.removeItem('usuario_actual');
   // 2. Redireccionas al login o recargas para limpiar el estado
   window.location.href = '/login'; // O usas tu router/onNavigate si lo manejas por estado
   };

@@ -1,15 +1,21 @@
-import React from 'react';
+import React, { useState } from 'react';
 import './DetalleViaje.css';
-import { TODOS_LOS_VIAJES } from '../data/viajesData';
+import { TODOS_LOS_VIAJES, realizarReserva, estaReservadoPorUsuario, Reserva } from '../data/viajesData';
 
 interface DetalleViajeProps {
   tripId?: string | null;
   onNavigate?: (view: string) => void;
+  onReservaExitosa?: (reserva: Reserva) => void;
 }
 
-export const DetalleViaje: React.FC<DetalleViajeProps> = ({ tripId, onNavigate }) => {
+export const DetalleViaje: React.FC<DetalleViajeProps> = ({ tripId, onNavigate, onReservaExitosa }) => {
+  
+  const [cargando, setCargando] = useState(false);
+  const [errorMsg, setErrorMsg] = useState<string | null>(null);
   // Buscar el viaje según el id recibido
   const viaje = TODOS_LOS_VIAJES.find((v) => v.id === tripId);
+  const yaReservado = tripId ? estaReservadoPorUsuario(tripId) : false;
+
 
   // Manejo de error si el viaje no existe (Criterio HU-09)
   if (!viaje) {
@@ -35,6 +41,25 @@ export const DetalleViaje: React.FC<DetalleViajeProps> = ({ tripId, onNavigate }
       </div>
     );
   }
+
+  const handleReservar = () => {
+    setErrorMsg(null);
+    setCargando(true);
+
+    // Simular pequeña latencia de servidor (Criterio HU-10: bloqueo mientras procesa)
+    setTimeout(() => {
+      const resultado = realizarReserva(viaje.id);
+      setCargando(false);
+
+      if (resultado.exito && resultado.reserva) {
+        if (onReservaExitosa) {
+          onReservaExitosa(resultado.reserva);
+        }
+      } else {
+        setErrorMsg(resultado.mensaje);
+      }
+    }, 600);
+  };
 
   return (
     <div className="resultados-container">
@@ -126,8 +151,24 @@ export const DetalleViaje: React.FC<DetalleViajeProps> = ({ tripId, onNavigate }
         </div>
 
         {/* Botón de Reservar Cupo */}
-        <button className="btn-reservar-cupo" type="button">
-          ✓ Reservar cupo
+        <button 
+          className="btn-reservar-cupo" 
+          type="button"
+          onClick={handleReservar}
+          disabled={cargando || yaReservado || viaje.cuposDisponibles <= 0}
+          style={{
+            backgroundColor: yaReservado ? '#64748b' : (viaje.cuposDisponibles <= 0 ? '#cbd5e1' : '#15803d'),
+            cursor: (cargando || yaReservado || viaje.cuposDisponibles <= 0) ? 'not-allowed' : 'pointer',
+            opacity: cargando ? 0.7 : 1
+          }}
+        >
+          {cargando 
+            ? 'Procesando reserva...' 
+            : yaReservado 
+              ? '✓ Ya tienes este viaje reservado' 
+              : viaje.cuposDisponibles <= 0 
+                ? 'Sin cupos disponibles' 
+                : '✓ Reservar cupo'}
         </button>
       </div>
 
