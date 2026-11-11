@@ -2,32 +2,63 @@ import React, { useState, useEffect } from 'react';
 import './MisReservas.css';
 import { ActiveView } from './HomeDashboard';
 import { obtenerReservasGuardadas, Reserva } from '../data/viajesData';
+import Swal from 'sweetalert2';
 
 interface MisReservasProps {
   onNavigate?: (view: ActiveView) => void;
   onSelectTrip?: (tripId: string) => void;
 }
 
+// Función auxiliar para validar el rol antes de ir a buscar
+const handleIntentarBuscar = (navegar: (view: any) => void, rolActual?: string) => {
+  if (rolActual?.toLowerCase() === 'conductor') {
+    Swal.fire({
+      icon: 'warning',
+      title: 'Acceso restringido',
+      text: 'Necesitas estar registrado como pasajero para acceder a esta función.',
+      confirmButtonColor: '#123B63',
+      confirmButtonText: 'Entendido'
+    });
+    return;
+  }
+  navegar('buscar');
+};
+
 export const MisReservas: React.FC<MisReservasProps> = ({ onNavigate, onSelectTrip }) => {
   const [tabActiva, setTabActiva] = useState<'reservas' | 'publicados'>('reservas');
   const [reservas, setReservas] = useState<Reserva[]>([]);
   const [viajesPublicados, setViajesPublicados] = useState<any[]>([]);
+  const [userRole, setUserRole] = useState<string | undefined>(undefined); // <--- NUEVO ESTADO
 
   useEffect(() => {
-    // Obtener el identificador del usuario actual (ej. correo o nombre guardado en el login)
     const currentUser = localStorage.getItem('userEmail') || localStorage.getItem('userName') || 'usuario_general';
 
-    // 1. Cargar y filtrar reservas exclusivamente para este usuario
+    // 1. Obtener rol del perfil
+    const fetchUserProfile = async () => {
+      const token = localStorage.getItem('token');
+      if (!token) return;
+      try {
+        const response = await fetch('/api/users/profile', {
+          headers: { 'Authorization': `Bearer ${token}` }
+        });
+        if (response.ok) {
+          const data = await response.json();
+          setUserRole(data.user?.roles); // Guarda el rol actual
+        }
+      } catch (error) {
+        console.error('Error al obtener perfil:', error);
+      }
+    };
+    fetchUserProfile();
+
+    // 2. Cargar y filtrar reservas del usuario
     const reservasGuardadas = obtenerReservasGuardadas();
-    
-    // Filtramos para que solo aparezcan las reservas del usuario autenticado 
-    // (Asumiendo que cada reserva guarda el correo/usuario del pasajero que la hizo)
     const reservasDelUsuario = reservasGuardadas.filter((reserva: any) => 
       !reserva.usuarioEmail || reserva.usuarioEmail === currentUser
     );
     setReservas(reservasDelUsuario);
 
-    // 2. Cargar viajes publicados usando una clave única por usuario en localStorage
+    // 3. Cargar viajes publicados
     const publicadosGuardados = JSON.parse(localStorage.getItem(`mis_viajes_publicados_${currentUser}`) || '[]');
     setViajesPublicados(publicadosGuardados);
   }, []);
@@ -176,7 +207,10 @@ export const MisReservas: React.FC<MisReservasProps> = ({ onNavigate, onSelectTr
           <span className="nav-icon">🏠</span>
           <span>Inicio</span>
         </button>
-        <button className="nav-item" onClick={() => onNavigate?.('buscar')} type="button">
+        <button 
+          className="nav-item" 
+          onClick={() => handleIntentarBuscar((view) => onNavigate && onNavigate(view), userRole)} 
+          type="button">
           <span className="nav-icon">🔍</span>
           <span>Buscar</span>
         </button>
