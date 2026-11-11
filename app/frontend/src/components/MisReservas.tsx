@@ -163,40 +163,48 @@ export const MisReservas: React.FC<MisReservasProps> = ({ onNavigate, onSelectTr
             ))
           )
         ) : (
-          /* --- VISTA DE VIAJES PUBLICADOS --- */
-          viajesPublicados.length === 0 ? (
+          /* --- VISTA DE VIAJES PUBLICADOS (HU-17) --- */
+          viajesPublicados.filter(pub => pub.estado !== 'borrador').length === 0 ? (
             <div className="no-viajes-container" style={{ textAlign: 'center', padding: '40px 20px', color: '#64748b' }}>
               <span style={{ fontSize: '2.5rem', display: 'block', marginBottom: '8px' }}>🚗</span>
               <h3 style={{ margin: '0 0 6px 0', color: '#1e293b', fontSize: '1.1rem' }}>No has publicado viajes</h3>
               <p style={{ margin: 0, fontSize: '0.9rem' }}>Comparte tu ruta y publica asientos vacíos para otros pasajeros.</p>
             </div>
           ) : (
-            viajesPublicados.map((pub, index) => (
-              <div key={index} className="trip-card">
-                <div className="card-header-conductor">
-                  <div className="conductor-info-left">
-                    <div className="conductor-avatar">UPB</div>
-                    <div className="conductor-textos">
-                      <h3>Mi publicación</h3>
-                      <p>{pub.cuposDisponibles || 'N/A'} cupos disponibles</p>
+            viajesPublicados
+              .filter(pub => pub.estado !== 'borrador') // Criterio 2: Ocultar borradores
+              .map((pub, index) => (
+                <div key={pub.id || index} className="trip-card">
+                  <div className="card-header-conductor">
+                    <div className="conductor-info-left">
+                      <div className="conductor-avatar">🚗</div>
+                      <div className="conductor-textos">
+                        <h3>Mi viaje publicado</h3>
+                        {/* Criterio 3 & 5: Cupos disponibles dinámicos */}
+                        <p style={{ fontWeight: 600, color: pub.cuposDisponibles > 0 ? '#166534' : '#991b1b' }}>
+                          {pub.cuposDisponibles !== undefined ? `${pub.cuposDisponibles} cupos disponibles` : 'Cupos por definir'}
+                        </p>
+                      </div>
+                    </div>
+                    <div className="badge-estado" style={{ background: '#e0f2fe', color: '#0369a1', padding: '4px 8px', borderRadius: '6px', fontSize: '0.8rem', fontWeight: 600 }}>
+                      Activo
                     </div>
                   </div>
-                  <div className="badge-estado" style={{ background: '#e0f2fe', color: '#0369a1', padding: '4px 8px', borderRadius: '6px', fontSize: '0.8rem', fontWeight: 600 }}>
-                    Activo
-                  </div>
-                </div>
 
-                <div className="card-body-detalles">
-                  <div className="horario-ruta">
-                    <span className="hora-text">{pub.horaSalida || 'Hora por definir'}</span>
-                    <span className="ruta-trayecto">{pub.origen} ➔ {pub.destino}</span>
-                  </div>
-                  <div className="punto-encuentro">
-                    <span className="pin-icon">📍</span> {pub.puntoEncuentro || 'Punto acordado'}
+                  {/* Criterio 3: Recorrido, Fecha y Hora */}
+                  <div className="card-body-detalles" style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+                    <div className="horario-ruta">
+                      <span className="hora-text">🕒 {pub.horaSalida || 'Hora por definir'} {pub.fecha ? `(${pub.fecha})` : ''}</span>
+                    </div>
+                    <div className="ruta-trayecto" style={{ fontWeight: '600', color: '#1e293b' }}>
+                      📍 {pub.origen} ➔ {pub.destino}
+                    </div>
+                    <div className="punto-encuentro" style={{ fontSize: '0.85rem', color: '#64748b' }}>
+                      <strong>Punto de encuentro:</strong> {pub.puntoEncuentro || 'Punto acordado'}
+                    </div>
                   </div>
                 </div>
-              </div>
-            ))
+              ))
           )
         )}
       </div>
