@@ -98,28 +98,9 @@ Actualmente, los estudiantes coordinan sus trayectos de forma desorganizada a tr
 
 ### F. Base de datos Neon / PostgreSQL
 
-21. **Opción recomendada:** usar la base de datos de Neon del equipo, que ya viene configurada en el archivo `.env`. No es necesario instalar PostgreSQL ni crear tablas.
+- **Opción recomendada:** usar la base de datos de Neon del equipo, que ya viene configurada en el archivo `.env`. No es necesario instalar PostgreSQL ni crear tablas.
     - **No ejecutar `npx prisma db push` sobre esta base**, porque Prisma podría intentar eliminar columnas que existen en Neon pero no están definidas en `schema.prisma`.
     - Neon (plan gratuito) suspende la base por inactividad, por lo que la primera petición (registro o inicio de sesión) puede tardar unos segundos.
-22. **Opción alternativa: usar una base de datos propia en Neon:**
-    1. Crear una cuenta gratuita en https://neon.tech y un proyecto nuevo.
-    2. En el Dashboard, copiar la **Connection string** y pegarla como valor de `DATABASE_URL` en `app/backend/.env`.
-    3. Dentro de `app/backend`, crear la tabla `User`:
-       ```bash
-       npx prisma db push
-       ```
-    4. En Neon, abrir el **SQL Editor** y agregar las columnas de perfil y estadísticas que el código utiliza:
-       ```sql
-       ALTER TABLE "User"
-         ADD COLUMN IF NOT EXISTS roles TEXT,
-         ADD COLUMN IF NOT EXISTS telefono TEXT,
-         ADD COLUMN IF NOT EXISTS programa TEXT,
-         ADD COLUMN IF NOT EXISTS semestre TEXT,
-         ADD COLUMN IF NOT EXISTS viajes_realizados INTEGER DEFAULT 0,
-         ADD COLUMN IF NOT EXISTS km_compartidos DOUBLE PRECISION DEFAULT 0,
-         ADD COLUMN IF NOT EXISTS calificacion DOUBLE PRECISION DEFAULT 0;
-       ```
-    5. Reiniciar el backend (`Ctrl + C` y luego `npm run dev`).
 
 ### G. Solución de problemas comunes
 
