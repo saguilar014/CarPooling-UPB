@@ -35,7 +35,7 @@ El uso del primer release funcional de **CarPooling UPB** abarca los flujos del 
 
 ## Enlaces
 - **Tablero de Jira:** https://carpoolingupb.atlassian.net/jira/software/projects/SCRUM/boards/1?filter=&groupBy=none&atlOrigin=eyJpIjoiMTJjZWEzMTA2MThjNDg3Njg2YjVkYTEzZDk0OWE3MjciLCJwIjoiaiJ9
-- **Prototipo de Media Fidelidad (Figma):** (PENDIENTE)
+- **Prototipo de Media Fidelidad (Figma):** https://www.figma.com/make/7BtcD3CIBgsBLEZc111FkA/Dating-app-carpooling?fullscreen=1&t=H6hW6WDIpFi0HeAr-1&code-node-id=0-6
 
 ## Integrantes del equipo
 - Samuel Aguilar Ruiz
