@@ -2,6 +2,7 @@ import React from 'react';
 import { useEffect, useState } from 'react';
 import Buscar from './Buscar';
 import ResultadosBusqueda from './ResultadosBusqueda';
+import Swal from 'sweetalert2';
 
 export type ActiveView = 'welcome' | 'register' | 'login' | 'dashboard' | 'buscar' | 'publicar' | 'mis-viajes' | 'perfil';
 
@@ -24,6 +25,40 @@ const formatRoleText = (role?: string) => {
   if (role === 'pasajero') return 'Pasajero';
   if (role === 'ambos') return 'Conductor · Pasajero';
   return 'Pasajero';
+};
+
+// Función para validar si puede acceder a buscar
+const handleIntentarBuscar = (navegar: (view: ActiveView) => void, rolActual?: string) => {
+  // Si el rol es estrictamente 'conductor', bloqueamos con SweetAlert
+  if (rolActual?.toLowerCase() === 'conductor') {
+    Swal.fire({
+      icon: 'warning',
+      title: 'Acceso restringido',
+      text: 'Necesitas estar registrado como pasajero para acceder a esta función.',
+      confirmButtonColor: '#123B63',
+      confirmButtonText: 'Entendido'
+    });
+    return;
+  }
+  // Si es pasajero o ambos, navega de manera normal
+  navegar('buscar');
+};
+
+// Función para validar si puede acceder a publicar viaje
+const handleIntentarPublicar = (navegar: (view: ActiveView) => void, rolActual?: string) => {
+  // Si el rol es estrictamente 'pasajero', bloqueamos con SweetAlert
+  if (rolActual?.toLowerCase() === 'pasajero') {
+    Swal.fire({
+      icon: 'warning',
+      title: 'Acceso restringido',
+      text: 'Necesitas estar registrado como conductor para acceder a esta función.',
+      confirmButtonColor: '#123B63',
+      confirmButtonText: 'Entendido'
+    });
+    return;
+  }
+  // Si es conductor o ambos, navega a publicar
+  navegar('publicar');
 };
 
 export const HomeDashboard: React.FC<HomeDashboardProps> = ({ onNavigate }) => {
@@ -97,13 +132,13 @@ export const HomeDashboard: React.FC<HomeDashboardProps> = ({ onNavigate }) => {
 
             {/* 3. Grid de Tarjetas Principales */}
             <section className="main-actions-grid">
-                <div className="action-card card-blue" onClick={() => onNavigate('buscar')}>
+                <div className="action-card card-blue" onClick={() => handleIntentarBuscar(onNavigate, userData?.roles)}>
                 <div className="card-icon">🔍</div>
                 <h3>Buscar viaje</h3>
                 <p>Encuentra un cupo disponible</p>
                 </div>
 
-                <div className="action-card card-green" onClick={() => onNavigate('publicar')}>
+                <div className="action-card card-green" onClick={() => handleIntentarPublicar(onNavigate, userData?.roles)}>
                 <div className="card-icon">➕</div>
                 <h3>Publicar viaje</h3>
                 <p>Ofrece cupos en tu ruta</p>
@@ -160,7 +195,7 @@ export const HomeDashboard: React.FC<HomeDashboardProps> = ({ onNavigate }) => {
           <span className="nav-icon">🏠</span>
           <span>Inicio</span>
         </button>
-        <button className="nav-item" onClick={() => onNavigate('buscar')}>
+        <button className="nav-item" onClick={() => handleIntentarBuscar(onNavigate, userData?.roles)}>
           <span className="nav-icon">🔍</span>
           <span>Buscar</span>
         </button>

@@ -1,0 +1,190 @@
+.publicar-form-content {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  padding-bottom: 24px;
+}
+
+.card-publicar-form {
+  background: #ffffff;
+  border-radius: 16px;
+  padding: 18px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+  border: 1px solid #f1f5f9;
+}
+
+.section-form-title {
+  margin: 0 0 16px 0;
+  font-size: 1.05rem;
+  color: #0f2942;
+  font-weight: 700;
+}
+
+/* Conector de ruta */
+.route-select-group {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  margin-bottom: 16px;
+}
+
+.route-indicators {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+}
+
+.origen-dot {
+  width: 12px;
+  height: 12px;
+  border: 2px solid #1e3a8a;
+  border-radius: 50%;
+  background: #ffffff;
+}
+
+.vertical-connector {
+  width: 2px;
+  height: 28px;
+  background-color: #cbd5e1;
+}
+
+.destino-dot {
+  width: 12px;
+  height: 12px;
+  background-color: #1e3a8a;
+  border-radius: 50%;
+}
+
+.route-inputs {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  flex: 1;
+}
+
+.input-select-form {
+  width: 100%;
+  padding: 10px 12px;
+  border: 1px solid #cbd5e1;
+  border-radius: 10px;
+  font-size: 0.9rem;
+  color: #1e293b;
+  background-color: #ffffff;
+  outline: none;
+}
+
+/* Grid de 2 columnas para Fecha y Hora */
+.form-row-2 {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+
+.form-group-item {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.form-label {
+  font-size: 0.88rem;
+  font-weight: 600;
+  color: #1e293b;
+}
+
+.optional-text {
+  font-weight: 400;
+  color: #94a3b8;
+}
+
+.input-date-form,
+.input-time-form {
+  width: 100%;
+  padding: 10px 10px;
+  border: 1px solid #cbd5e1;
+  border-radius: 10px;
+  font-size: 0.88rem;
+  color: #334155;
+  box-sizing: border-box;
+}
+
+/* Input con Icono */
+.input-with-icon {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.input-icon {
+  position: absolute;
+  left: 10px;
+  font-size: 0.9rem;
+}
+
+.input-text-form {
+  width: 100%;
+  padding: 10px 10px 10px 32px;
+  border: 1px solid #cbd5e1;
+  border-radius: 10px;
+  font-size: 0.88rem;
+  color: #1e293b;
+  box-sizing: border-box;
+}
+
+/* Botones de Cupos */
+.cupos-selector-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 10px;
+}
+
+.cupo-btn {
+  background: #ffffff;
+  border: 1px solid #cbd5e1;
+  border-radius: 10px;
+  padding: 10px 0;
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: #1e293b;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.cupo-btn.selected {
+  background-color: #1d609b;
+  color: #ffffff;
+  border-color: #1d609b;
+}
+
+.textarea-form {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #cbd5e1;
+  border-radius: 10px;
+  font-size: 0.88rem;
+  font-family: inherit;
+  color: #1e293b;
+  resize: none;
+  box-sizing: border-box;
+}
+
+/* Botón Verde */
+.btn-publicar-verde {
+  width: 100%;
+  margin-top: 16px;
+  padding: 14px;
+  background-color: #15803d;
+  color: #ffffff;
+  border: none;
+  border-radius: 12px;
+  font-size: 1rem;
+  font-weight: 700;
+  cursor: pointer;
+  box-shadow: 0 4px 10px rgba(21, 128, 61, 0.25);
+  transition: background-color 0.2s;
+}
+
+.btn-publicar-verde:hover {
+  background-color: #166534;
+}
