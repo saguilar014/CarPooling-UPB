@@ -48,12 +48,41 @@ export const DetalleViaje: React.FC<DetalleViajeProps> = ({ tripId, onNavigate, 
     setErrorMsg(null);
     setCargando(true);
 
-    // Simular pequeña latencia de servidor (Criterio HU-10: bloqueo mientras procesa)
+    // Simular pequeña latencia de servidor
     setTimeout(() => {
       const resultado = realizarReserva(viaje.id);
       setCargando(false);
 
       if (resultado.exito && resultado.reserva) {
+        // --- SINCRONIZACIÓN DE CUPOS PARA EL CONDUCTOR (HU-17) ---
+        try {
+          // Identificar al conductor del viaje de forma segura con tipado flexible
+          const viajeAny = viaje as any;
+          const conductorEmail = viajeAny.conductor?.email || viajeAny.conductorEmail || viajeAny.conductor?.nombre || 'conductor_general';
+          const storageKey = `mis_viajes_publicados_${conductorEmail}`;
+          
+          // Obtener los viajes publicados de ese conductor
+          let viajesPublicados = JSON.parse(localStorage.getItem(storageKey) || '[]');
+          
+          // Descontar 1 cupo al viaje correspondiente
+          viajesPublicados = viajesPublicados.map((pub: any) => {
+            if (String(pub.id) === String(viaje.id)) {
+              const cuposActuales = Number(pub.cuposDisponibles) ?? 1;
+              return {
+                ...pub,
+                cuposDisponibles: Math.max(0, cuposActuales - 1)
+              };
+            }
+            return pub;
+          });
+
+          // Guardar de nuevo la lista actualizada en el storage del conductor
+          localStorage.setItem(storageKey, JSON.stringify(viajesPublicados));
+        } catch (err) {
+          console.error("Error al sincronizar cupos del conductor:", err);
+        }
+        // ---------------------------------------------------------
+
         if (onReservaExitosa) {
           onReservaExitosa(resultado.reserva);
         }

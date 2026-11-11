@@ -143,6 +143,20 @@ const nuevoViajeData = {
 };
 
     const creado = agregarNuevoViaje(nuevoViajeData);
+
+    // --- NUEVO: GUARDAR EN EL LOCALSTORAGE DEL CONDUCTOR PARA LA HU-17 ---
+    try {
+      const currentUser = localStorage.getItem('userEmail') || localStorage.getItem('userName') || conductorNombre || 'conductor_general';
+      const storageKey = `mis_viajes_publicados_${currentUser}`;
+      
+      const viajesExistentes = JSON.parse(localStorage.getItem(storageKey) || '[]');
+      viajesExistentes.push(creado); // Agregamos el viaje recién creado
+      localStorage.setItem(storageKey, JSON.stringify(viajesExistentes));
+    } catch (err) {
+      console.error("Error al guardar en Mis Viajes Publicados:", err);
+    }
+    // -------------------------------------------------------------------
+
     setViajeCreado(creado);
     setIsSubmitting(false);
   };
