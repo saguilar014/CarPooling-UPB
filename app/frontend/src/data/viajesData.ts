@@ -105,7 +105,7 @@ const VIAJES_INICIALES: Viaje[] = [
     horaSalida: '12:15 PM',
     fecha: 'Hoy',
     puntoEncuentro: 'Portería Circular 1 (UPB)',
-    cuposDisponibles: 1,
+    cuposDisponibles: 2,
   },
   {
     id: '5',
@@ -151,11 +151,39 @@ const VIAJES_INICIALES: Viaje[] = [
 
 export const obtenerViajesActualizados = (): Viaje[] => {
   const guardados = localStorage.getItem('todos_los_viajes_upb');
-  if (guardados) {
-    return JSON.parse(guardados);
-  }
-  localStorage.setItem('todos_los_viajes_upb', JSON.stringify(VIAJES_INICIALES));
-  return VIAJES_INICIALES;
+  let viajes: Viaje[] = guardados ? JSON.parse(guardados) : [...VIAJES_INICIALES];
+
+  // Recalcular cupos reales basándose en las reservas de todos los usuarios en localStorage
+  viajes = viajes.map((viaje) => {
+    // Buscamos en todo el localStorage si algún usuario tiene reservado este viaje
+    let reservasTotalesParaEsteViaje = 0;
+    
+    for (let i = 0; i < localStorage.length; i++) {
+      const key = localStorage.key(i);
+      if (key && key.startsWith('mis_reservas_')) {
+        const reservasData = localStorage.getItem(key);
+        if (reservasData) {
+          const reservas: Reserva[] = JSON.parse(reservasData);
+          // Contamos cuántas veces este usuario reservó este viaje específico
+          const count = reservas.filter((r) => r.viaje.id === viaje.id && r.estado === 'Confirmado').length;
+          reservasTotalesParaEsteViaje += count;
+        }
+      }
+    }
+
+    // El cupo real disponible es el cupo inicial total menos las reservas activas encontradas
+    const viajeOriginal = VIAJES_INICIALES.find((v) => v.id === viaje.id);
+    const cupoMaximo = viajeOriginal ? viajeOriginal.cuposDisponibles : viaje.cuposDisponibles;
+    
+    return {
+      ...viaje,
+      cuposDisponibles: Math.max(0, cupoMaximo - reservasTotalesParaEsteViaje)
+    };
+  });
+
+  // Guardamos la sincronización
+  localStorage.setItem('todos_los_viajes_upb', JSON.stringify(viajes));
+  return viajes;
 };
 
 export let TODOS_LOS_VIAJES: Viaje[] = obtenerViajesActualizados();
@@ -215,4 +243,20 @@ export const realizarReserva = (tripId: string): { exito: boolean; mensaje: stri
   localStorage.setItem(`mis_reservas_${usuario}`, JSON.stringify(reservasActualizadas));
 
   return { exito: true, mensaje: '¡Reserva realizada con éxito!', reserva: nuevaReserva };
+};
+
+// Función clave: Guarda el viaje recién creado por el conductor con sus datos reales
+export const agregarNuevoViaje = (nuevoViaje: Omit<Viaje, 'id'>): Viaje => {
+  const viajesActuales = obtenerViajesActualizados();
+
+  const idUnico = `viaje_${Date.now()}`;
+  const viajeCompleto: Viaje = {
+    id: idUnico,
+    ...nuevoViaje
+  };
+
+  const viajesActualizados = [viajeCompleto, ...viajesActuales];
+  localStorage.setItem('todos_los_viajes_upb', JSON.stringify(viajesActualizados));
+
+  return viajeCompleto;
 };

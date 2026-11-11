@@ -188,3 +188,68 @@
 .btn-publicar-verde:hover {
   background-color: #166534;
 }
+
+/* Banner verde de éxito */
+.success-card-banner {
+  background-color: #15803d;
+  border-radius: 20px;
+  padding: 24px;
+  text-align: center;
+  color: #ffffff;
+  box-shadow: 0 4px 12px rgba(21, 128, 61, 0.2);
+}
+
+.success-check-circle {
+  width: 48px;
+  height: 48px;
+  background-color: rgba(255, 255, 255, 0.25);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 12px auto;
+  font-size: 1.6rem;
+  font-weight: 900;
+  color: #ffffff;
+}
+
+.success-title {
+  margin: 0 0 6px 0;
+  font-size: 1.35rem;
+  font-weight: 800;
+}
+
+.success-subtitle {
+  margin: 0;
+  font-size: 0.9rem;
+  opacity: 0.9;
+}
+
+.badge-status-confirmado {
+  background-color: #dcfce7;
+  color: #15803d;
+  font-size: 0.78rem;
+  font-weight: 700;
+  padding: 4px 10px;
+  border-radius: 20px;
+}
+
+/* Filas del resumen */
+.resumen-detail-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 0;
+  border-bottom: 1px solid #f1f5f9;
+  font-size: 0.9rem;
+}
+
+.resumen-label {
+  color: #64748b;
+}
+
+.resumen-value {
+  color: #0f2942;
+  font-weight: 700;
+  text-align: right;
+}

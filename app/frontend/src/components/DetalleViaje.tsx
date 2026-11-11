@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import './DetalleViaje.css';
-import { TODOS_LOS_VIAJES, realizarReserva, estaReservadoPorUsuario, Reserva } from '../data/viajesData';
+import { obtenerViajesActualizados, realizarReserva, estaReservadoPorUsuario, Reserva } from '../data/viajesData';
 
 interface DetalleViajeProps {
   tripId?: string | null;
@@ -13,7 +13,9 @@ export const DetalleViaje: React.FC<DetalleViajeProps> = ({ tripId, onNavigate, 
   const [cargando, setCargando] = useState(false);
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
   // Buscar el viaje según el id recibido
-  const viaje = TODOS_LOS_VIAJES.find((v) => v.id === tripId);
+  // Obtener los viajes actualizados desde el localStorage para incluir los publicados
+  const todosLosViajes = obtenerViajesActualizados();
+  const viaje = todosLosViajes.find((v) => String(v.id) === String(tripId));
   const yaReservado = tripId ? estaReservadoPorUsuario(tripId) : false;
 
 

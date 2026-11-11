@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import './PublicarViaje.css';
 import Swal from 'sweetalert2';
+import { agregarNuevoViaje } from '../data/viajesData';
+import ViajePublicado from './ViajePublicado'; // Importamos la nueva interfaz
 
 interface PublicarViajeProps {
   onNavigate?: (view: string) => void;
@@ -14,11 +16,24 @@ export const PublicarViaje: React.FC<PublicarViajeProps> = ({ onNavigate }) => {
   const [puntoEncuentro, setPuntoEncuentro] = useState('');
   const [cuposDisponibles, setCuposDisponibles] = useState<number>(3);
   const [notas, setNotas] = useState('');
-  const [userRole, setUserRole] = useState<string>('pasajero');
+  
+const [conductorNombre, setConductorNombre] = useState<string>('Usuario UPB');
+const [conductorCalificacion, setConductorCalificacion] = useState<number>(5.0);
+const [userRole, setUserRole] = useState<string>('conductor');
 
-  // Obtener rol del usuario para validar navegación en la navbar inferior
+// Función para obtener únicamente las iniciales del nombre
+const obtenerIniciales = (nombre: string): string => {
+  if (!nombre) return 'U';
+  const partes = nombre.trim().split(' ').filter(Boolean);
+  if (partes.length === 1) return partes[0].slice(0, 2).toUpperCase();
+  return (partes[0][0] + partes[1][0]).toUpperCase();
+};
+
+  const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
+  const [viajeCreado, setViajeCreado] = useState<any | null>(null);
+
   useEffect(() => {
-    const fetchUserRole = async () => {
+    const fetchUserProfile = async () => {
       const token = localStorage.getItem('token');
       if (!token) return;
       try {
@@ -27,16 +42,18 @@ export const PublicarViaje: React.FC<PublicarViajeProps> = ({ onNavigate }) => {
         });
         if (response.ok) {
           const data = await response.json();
-          setUserRole(data.user?.roles || 'pasajero');
+          const user = data.user;
+          setConductorNombre(user.nombre_completo || localStorage.getItem('userName') || 'Usuario UPB');
+          setConductorCalificacion(user.calificacion !== undefined ? Number(user.calificacion) : 5.0);
+          setUserRole(user.roles || 'conductor');
         }
       } catch (err) {
-        console.error('Error al obtener el rol:', err);
+        console.error('Error al obtener perfil:', err);
       }
     };
-    fetchUserRole();
+    fetchUserProfile();
   }, []);
 
-  // Función para restringir la búsqueda en la navbar si es solo conductor
   const handleIntentarBuscarNav = () => {
     if (userRole.toLowerCase() === 'conductor') {
       Swal.fire({
@@ -51,11 +68,10 @@ export const PublicarViaje: React.FC<PublicarViajeProps> = ({ onNavigate }) => {
     onNavigate?.('buscar');
   };
 
-  // Validaciones según criterios de aceptación de HU-12
   const handlePublicar = (e: React.FormEvent) => {
     e.preventDefault();
+    if (isSubmitting) return;
 
-    // 1. Validar campos requeridos
     if (!origen || !destino || !fecha || !horaSalida || !puntoEncuentro) {
       Swal.fire({
         icon: 'warning',
@@ -66,7 +82,6 @@ export const PublicarViaje: React.FC<PublicarViajeProps> = ({ onNavigate }) => {
       return;
     }
 
-    // 2. Validar que la fecha no sea pasada
     const fechaSeleccionada = new Date(`${fecha}T${horaSalida || '00:00'}`);
     const ahora = new Date();
     if (fechaSeleccionada < ahora) {
@@ -79,7 +94,6 @@ export const PublicarViaje: React.FC<PublicarViajeProps> = ({ onNavigate }) => {
       return;
     }
 
-    // 3. Validar cupos positivos y no decimales
     if (cuposDisponibles <= 0 || !Number.isInteger(cuposDisponibles)) {
       Swal.fire({
         icon: 'error',
@@ -90,21 +104,66 @@ export const PublicarViaje: React.FC<PublicarViajeProps> = ({ onNavigate }) => {
       return;
     }
 
-    // Alerta temporal para el botón (diseño no funcional aún)
-    Swal.fire({
-      icon: 'info',
-      title: 'Borrador / Publicación',
-      text: 'Diseño completado. La persistencia se habilitará en la siguiente fase.',
-      confirmButtonColor: '#123B63'
-    });
+    setIsSubmitting(true);
+
+    const [h, m] = horaSalida.split(':');
+    const horaNum = parseInt(h, 10);
+    const ampm = horaNum >= 12 ? 'PM' : 'AM';
+    const hora12 = `${horaNum % 12 || 12}:${m} ${ampm}`;
+
+    // Función auxiliar para sacar las iniciales (Ej: "Samuel Aguilar" -> "SA")
+    const obtenerIniciales = (nombre: string): string => {
+    if (!nombre) return 'U';
+    const partes = nombre.trim().split(' ').filter(Boolean);
+    if (partes.length === 1) return partes[0].slice(0, 2).toUpperCase();
+    return (partes[0][0] + partes[1][0]).toUpperCase();
+    };
+
+// Al construir el objeto del viaje:
+const nuevoViajeData = {
+  conductor: {
+    nombre: conductorNombre,
+    avatar: obtenerIniciales(conductorNombre), // <--- ¡Aquí se generan las iniciales "SA"!
+    calificacion: conductorCalificacion,       // <--- Calificación real de la DB
+    resenas: 18,                 // <--- Reseñas reales de la DB
+    vehiculo: 'Automóvil UPB',
+    carrera: 'Ingeniería de Sistemas',
+    semestre: '4°',
+    telefono: '+57 3053410892',
+    verificado: true
+  },
+  origen,
+  destino,
+  fecha,
+  horaSalida: hora12,
+  puntoEncuentro,
+  cuposDisponibles,
+  precio: 0,
+  notas: notas || undefined
+};
+
+    const creado = agregarNuevoViaje(nuevoViajeData);
+    setViajeCreado(creado);
+    setIsSubmitting(false);
   };
+
+  // Si ya se creó el viaje, renderizamos directamente la nueva interfaz separada
+  if (viajeCreado) {
+    return (
+      <ViajePublicado 
+        viaje={viajeCreado} 
+        onNavigate={(view) => onNavigate?.(view)} 
+        onBuscarNavClick={handleIntentarBuscarNav}
+      />
+    );
+  }
 
   return (
     <div className="resultados-container" style={{ overflow: 'hidden' }}>
       <div className="resultados-header">
         <button 
           className="btn-back" 
-          onClick={() => onNavigate && onNavigate('dashboard')}
+          onClick={() => onNavigate?.('dashboard')}
           type="button"
         >
           &#8249;
@@ -114,11 +173,9 @@ export const PublicarViaje: React.FC<PublicarViajeProps> = ({ onNavigate }) => {
 
       <div className="publicar-form-content">
         <form onSubmit={handlePublicar}>
-          {/* Tarjeta Formulario de Ruta */}
           <div className="card-publicar-form">
             <h3 className="section-form-title">Ruta del viaje</h3>
 
-            {/* Selector de Ruta con Conector Visual */}
             <div className="route-select-group">
               <div className="route-indicators">
                 <div className="dot-circle origen-dot"></div>
@@ -156,7 +213,6 @@ export const PublicarViaje: React.FC<PublicarViajeProps> = ({ onNavigate }) => {
               </div>
             </div>
 
-            {/* Fecha y Hora de salida en grid de 2 columnas */}
             <div className="form-row-2">
               <div className="form-group-item">
                 <label className="form-label">Fecha</label>
@@ -179,7 +235,6 @@ export const PublicarViaje: React.FC<PublicarViajeProps> = ({ onNavigate }) => {
               </div>
             </div>
 
-            {/* Punto de encuentro */}
             <div className="form-group-item" style={{ marginTop: '14px' }}>
               <label className="form-label">Punto de encuentro</label>
               <div className="input-with-icon">
@@ -194,7 +249,6 @@ export const PublicarViaje: React.FC<PublicarViajeProps> = ({ onNavigate }) => {
               </div>
             </div>
 
-            {/* Selector de Cupos */}
             <div className="form-group-item" style={{ marginTop: '14px' }}>
               <label className="form-label">Cupos disponibles</label>
               <div className="cupos-selector-grid">
@@ -211,7 +265,6 @@ export const PublicarViaje: React.FC<PublicarViajeProps> = ({ onNavigate }) => {
               </div>
             </div>
 
-            {/* Notas Adicionales */}
             <div className="form-group-item" style={{ marginTop: '14px' }}>
               <label className="form-label">
                 Notas adicionales <span className="optional-text">(opcional)</span>
@@ -226,14 +279,12 @@ export const PublicarViaje: React.FC<PublicarViajeProps> = ({ onNavigate }) => {
             </div>
           </div>
 
-          {/* Botón Verde de Publicar Viaje */}
-          <button type="submit" className="btn-publicar-verde">
-            Publicar Viaje
+          <button type="submit" className="btn-publicar-verde" disabled={isSubmitting}>
+            {isSubmitting ? 'Publicando...' : 'Publicar Viaje'}
           </button>
         </form>
       </div>
 
-      {/* Navbar Inferior */}
       <nav className="bottom-navbar">
         <button className="nav-item" onClick={() => onNavigate?.('dashboard')}>
           <span className="nav-icon">🏠</span>
