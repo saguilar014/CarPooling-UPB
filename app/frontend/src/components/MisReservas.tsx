@@ -14,12 +14,21 @@ export const MisReservas: React.FC<MisReservasProps> = ({ onNavigate, onSelectTr
   const [viajesPublicados, setViajesPublicados] = useState<any[]>([]);
 
   useEffect(() => {
-    // 1. Cargar reservas del pasajero desde localStorage
-    const reservasGuardadas = obtenerReservasGuardadas();
-    setReservas(reservasGuardadas);
+    // Obtener el identificador del usuario actual (ej. correo o nombre guardado en el login)
+    const currentUser = localStorage.getItem('userEmail') || localStorage.getItem('userName') || 'usuario_general';
 
-    // 2. Cargar viajes publicados (si los guardas en localStorage o backend)
-    const publicadosGuardados = JSON.parse(localStorage.getItem('mis_viajes_publicados') || '[]');
+    // 1. Cargar y filtrar reservas exclusivamente para este usuario
+    const reservasGuardadas = obtenerReservasGuardadas();
+    
+    // Filtramos para que solo aparezcan las reservas del usuario autenticado 
+    // (Asumiendo que cada reserva guarda el correo/usuario del pasajero que la hizo)
+    const reservasDelUsuario = reservasGuardadas.filter((reserva: any) => 
+      !reserva.usuarioEmail || reserva.usuarioEmail === currentUser
+    );
+    setReservas(reservasDelUsuario);
+
+    // 2. Cargar viajes publicados usando una clave única por usuario en localStorage
+    const publicadosGuardados = JSON.parse(localStorage.getItem(`mis_viajes_publicados_${currentUser}`) || '[]');
     setViajesPublicados(publicadosGuardados);
   }, []);
 
