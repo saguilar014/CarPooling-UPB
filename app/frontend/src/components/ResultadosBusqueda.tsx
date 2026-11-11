@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import './ResultadosBusqueda.css';
-import { TODOS_LOS_VIAJES } from '../data/viajesData';
+import { obtenerViajesActualizados } from '../data/viajesData';
 
 interface ResultadosBusquedaProps {
   origen?: string;   // <--- Agrégalo aquí
@@ -16,11 +16,21 @@ export const ResultadosBusqueda: React.FC<ResultadosBusquedaProps> = ({
   onSelectTrip 
 }) => {
   // Filtra usando el mock centralizado
-  const viajesFiltrados = TODOS_LOS_VIAJES.filter(
-    (viaje) =>
-      viaje.origen.toLowerCase() === origen.toLowerCase() &&
-      viaje.destino.toLowerCase() === destino.toLowerCase()
-  );
+  // Obtener los viajes más recientes (incluyendo los publicados por el conductor)
+  const todosLosViajes = obtenerViajesActualizados();
+
+  // Filtro flexible para asegurar coincidencia
+  const viajesFiltrados = todosLosViajes.filter((viaje) => {
+    const orgViaje = viaje.origen.toLowerCase().trim();
+    const orgBusqueda = origen.toLowerCase().trim();
+    const destViaje = viaje.destino.toLowerCase().trim();
+    const destBusqueda = destino.toLowerCase().trim();
+
+    const coincideOrigen = orgBusqueda === '' || orgViaje.includes(orgBusqueda) || orgBusqueda.includes(orgViaje);
+    const coincideDestino = destBusqueda === '' || destViaje.includes(destBusqueda) || destBusqueda.includes(destViaje);
+
+    return coincideOrigen && coincideDestino;
+  });
 
   return (
     <div className="resultados-container">
