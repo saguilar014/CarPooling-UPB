@@ -11,6 +11,7 @@ import DetalleViaje from './components/DetalleViaje';;
 import ReservaConfirmada from './components/ReservaConfirmada';
 import { Reserva } from './data/viajesData';
 import PublicarViaje from './components/PublicarViaje';
+import { MisReservas } from './components/MisReservas';
 
 type ViewType = 'welcome' | 'register' | 'login' | 'dashboard' | 'buscar' | 'resultados' | 'detalle' | 'reserva-confirmada' |'publicar' | 'mis-viajes' | 'perfil';
 
@@ -117,6 +118,7 @@ export function App() {
             setSearchParams({ origen, destino });
             changeView('resultados');
         }}
+        
         />
       )}
 
@@ -155,6 +157,17 @@ export function App() {
           onNavigate={(view) => changeView(view as ViewType)}
         />
       )}
+
+      {currentView === 'mis-viajes' && (
+        <MisReservas 
+          onNavigate={(view) => changeView(view as ViewType)}
+          onSelectTrip={(tripId) => {
+            setSelectedTripId(tripId);
+            changeView('detalle');
+          }}
+        />
+      )}
+      
     </main>
   );
 }
