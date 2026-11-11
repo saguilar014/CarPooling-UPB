@@ -10,6 +10,7 @@ import ResultadosBusqueda from './components/ResultadosBusqueda'
 import DetalleViaje from './components/DetalleViaje';;
 import ReservaConfirmada from './components/ReservaConfirmada';
 import { Reserva } from './data/viajesData';
+import PublicarViaje from './components/PublicarViaje';
 
 type ViewType = 'welcome' | 'register' | 'login' | 'dashboard' | 'buscar' | 'resultados' | 'detalle' | 'reserva-confirmada' |'publicar' | 'mis-viajes' | 'perfil';
 
@@ -145,6 +146,12 @@ export function App() {
       {currentView === 'reserva-confirmada' && (
         <ReservaConfirmada 
           reserva={ultimaReserva}
+          onNavigate={(view) => changeView(view as ViewType)}
+        />
+      )}
+
+      {currentView === 'publicar' && (
+        <PublicarViaje 
           onNavigate={(view) => changeView(view as ViewType)}
         />
       )}

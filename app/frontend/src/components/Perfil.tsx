@@ -1,5 +1,21 @@
 import React, { useEffect, useState } from 'react';
 import './Perfil.css';
+import Swal from 'sweetalert2';
+
+// Función auxiliar para validar el rol antes de ir a buscar
+const handleIntentarBuscar = (navegar: (view: any) => void, rolActual?: string) => {
+  if (rolActual?.toLowerCase() === 'conductor') {
+    Swal.fire({
+      icon: 'warning',
+      title: 'Acceso restringido',
+      text: 'Necesitas estar registrado como pasajero para acceder a esta función.',
+      confirmButtonColor: '#123B63',
+      confirmButtonText: 'Entendido'
+    });
+    return;
+  }
+  navegar('buscar');
+};
 
 interface UserProfile {
   nombreCompleto?: string;
@@ -274,7 +290,7 @@ export default function Perfil({ onNavigate }: PerfilProps) {
           <span className="nav-icon">🏠</span>
           <span>Inicio</span>
         </button>
-        <button className="nav-item" onClick={() => onNavigate && onNavigate('buscar')}>
+        <button className="nav-item" onClick={() => handleIntentarBuscar((view) => onNavigate && onNavigate(view), user?.roles)}>
           <span className="nav-icon">🔍</span>
           <span>Buscar</span>
         </button>
